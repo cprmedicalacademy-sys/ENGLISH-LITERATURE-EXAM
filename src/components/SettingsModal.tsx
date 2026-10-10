@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-import { X, Save, Link2, Volume2, Clock, CheckCircle2, AlertCircle, RefreshCw } from 'lucide-react';
-import { DEFAULT_SCRIPT_URL_KEY, DEFAULT_EXAM_MODE_KEY } from '../data/questions';
+import { X, Save, Link2, Volume2, CheckCircle2, RefreshCw } from 'lucide-react';
+import { DEFAULT_SCRIPT_URL_KEY } from '../data/questions';
 
 interface SettingsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  examMode: 'live' | 'open';
-  onUpdateExamMode: (mode: 'live' | 'open') => void;
   soundEnabled: boolean;
   onToggleSound: () => void;
   onScriptUrlChange: (url: string) => void;
@@ -15,8 +13,6 @@ interface SettingsModalProps {
 export const SettingsModal: React.FC<SettingsModalProps> = ({
   isOpen,
   onClose,
-  examMode,
-  onUpdateExamMode,
   soundEnabled,
   onToggleSound,
   onScriptUrlChange,
@@ -78,7 +74,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           </h3>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition cursor-pointer"
             aria-label="Close"
           >
             <X className="w-5 h-5" />
@@ -121,44 +117,6 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             )}
           </div>
 
-          {/* Exam Timing Mode */}
-          <div className="pt-2 border-t border-slate-100">
-            <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-              <Clock className="w-4 h-4 text-indigo-600" />
-              <span>পরীক্ষা সময়সূচি মোড (Timing Schedule Mode)</span>
-            </label>
-            <div className="grid grid-cols-2 gap-2 text-xs">
-              <button
-                type="button"
-                onClick={() => onUpdateExamMode('live')}
-                className={`p-3 rounded-xl border text-left transition cursor-pointer ${
-                  examMode === 'live'
-                    ? 'border-indigo-600 bg-indigo-50/70 text-indigo-950 font-semibold'
-                    : 'border-slate-200 hover:bg-slate-50 text-slate-600'
-                }`}
-              >
-                <span className="block font-bold">লাইভ সময়সূচি (8:00 - 9:00 PM)</span>
-                <span className="text-[11px] text-slate-500 mt-0.5 block bangla-text">
-                  শুধুমাত্র নির্ধারিত লাইভ সময়ে পরীক্ষা দেওয়া যাবে।
-                </span>
-              </button>
-              <button
-                type="button"
-                onClick={() => onUpdateExamMode('open')}
-                className={`p-3 rounded-xl border text-left transition cursor-pointer ${
-                  examMode === 'open'
-                    ? 'border-emerald-600 bg-emerald-50/70 text-emerald-950 font-semibold'
-                    : 'border-slate-200 hover:bg-slate-50 text-slate-600'
-                }`}
-              >
-                <span className="block font-bold">প্র্যাকটিস মোড (Open Access)</span>
-                <span className="text-[11px] text-slate-500 mt-0.5 block bangla-text">
-                  যেকোনো সময় অনুশীলন ও প্রশ্নপত্র যাচাই করা যাবে।
-                </span>
-              </button>
-            </div>
-          </div>
-
           {/* Sound Audio Toggle */}
           <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -192,7 +150,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition"
+              className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition cursor-pointer"
             >
               Close
             </button>

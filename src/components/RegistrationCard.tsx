@@ -4,10 +4,9 @@ import { StudentData } from '../types/exam';
 
 interface RegistrationCardProps {
   onStart: (data: StudentData) => void;
-  examMode: 'live' | 'open';
 }
 
-export const RegistrationCard: React.FC<RegistrationCardProps> = ({ onStart, examMode }) => {
+export const RegistrationCard: React.FC<RegistrationCardProps> = ({ onStart }) => {
   const [name, setName] = useState('');
   const [roll, setRoll] = useState('');
   const [agreed, setAgreed] = useState(true);

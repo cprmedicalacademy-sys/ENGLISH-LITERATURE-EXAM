@@ -6,7 +6,6 @@ export const MARKS_PER_CORRECT = 1.0;
 export const NEGATIVE_MARK_PER_INCORRECT = 0.5;
 
 export const DEFAULT_SCRIPT_URL_KEY = 'cpr_google_script_url';
-export const DEFAULT_EXAM_MODE_KEY = 'cpr_exam_mode'; // 'live' | 'open'
 
 export const questions: Question[] = [
   {

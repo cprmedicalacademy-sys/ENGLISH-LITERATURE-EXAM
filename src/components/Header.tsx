@@ -7,7 +7,6 @@ interface HeaderProps {
   soundEnabled: boolean;
   onToggleSound: () => void;
   onOpenSettings: () => void;
-  examMode: 'live' | 'open';
   answeredCount?: number;
   totalQuestions?: number;
 }
@@ -18,7 +17,6 @@ export const Header: React.FC<HeaderProps> = ({
   soundEnabled,
   onToggleSound,
   onOpenSettings,
-  examMode,
   answeredCount = 0,
   totalQuestions = 40,
 }) => {
@@ -40,14 +38,9 @@ export const Header: React.FC<HeaderProps> = ({
                 <h1 className="text-base sm:text-lg font-bold tracking-wide text-white uppercase english-sans">
                   CPR Medical Academy
                 </h1>
-                {examMode === 'open' && (
-                  <span className="text-[10px] uppercase font-semibold tracking-wider px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                    Practice Mode
-                  </span>
-                )}
               </div>
               <p className="text-xs text-indigo-300 font-medium bangla-text">
-                BCS Special Crystal Batch · English Literature
+                BCS Special Crystal Batch · Online Exam
               </p>
             </div>
           </div>

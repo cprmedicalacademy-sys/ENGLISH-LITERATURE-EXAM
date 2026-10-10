@@ -6,15 +6,12 @@ import { ExamInterface } from './components/ExamInterface';
 import { ResultInterface } from './components/ResultInterface';
 import { ReviewSection } from './components/ReviewSection';
 import { SettingsModal } from './components/SettingsModal';
-import { questions, EXAM_DURATION_MINUTES, DEFAULT_SCRIPT_URL_KEY, DEFAULT_EXAM_MODE_KEY } from './data/questions';
+import { questions, EXAM_DURATION_MINUTES, DEFAULT_SCRIPT_URL_KEY } from './data/questions';
 import { StudentData, ExamResult, ExamStatus } from './types/exam';
 import { playSubmitChime, playWarningBeep, playSelectTick } from './utils/sound';
 
 export default function App() {
   const [examStatus, setExamStatus] = useState<ExamStatus>('not_started');
-  const [examMode, setExamMode] = useState<'live' | 'open'>(() => {
-    return (localStorage.getItem(DEFAULT_EXAM_MODE_KEY) as 'live' | 'open') || 'open';
-  });
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [scriptUrl, setScriptUrl] = useState(() => {
@@ -47,7 +44,6 @@ export default function App() {
   const startTime = 20 * 60; // 8:00 PM (20:00)
   const endTime = 21 * 60;   // 9:00 PM (21:00)
   const isBeforeStart = currentMinutes < startTime;
-  const isAfterEnd = currentMinutes > endTime;
   const isWithinLiveWindow = currentMinutes >= startTime && currentMinutes <= endTime;
 
   // Formatted current time string
@@ -73,15 +69,13 @@ export default function App() {
             return 0;
           }
 
-          // Check if live mode exceeded end time
-          if (examMode === 'live') {
-            const now = new Date();
-            const nowMin = now.getHours() * 60 + now.getMinutes();
-            if (nowMin > endTime) {
-              if (timerRef.current) clearInterval(timerRef.current);
-              handleAutoSubmit('রাত ৯:০০ টার নির্ধারিত সময় অতিক্রম করায় পরীক্ষা জমা দেওয়া হয়েছে।');
-              return 0;
-            }
+          // Strict Live check: auto submit if current time exceeds 9:00 PM
+          const now = new Date();
+          const nowMin = now.getHours() * 60 + now.getMinutes();
+          if (nowMin > endTime) {
+            if (timerRef.current) clearInterval(timerRef.current);
+            handleAutoSubmit('রাত ৯:০০ টার নির্ধারিত সময় অতিক্রম করায় পরীক্ষা জমা দেওয়া হয়েছে।');
+            return 0;
           }
 
           return prev - 1;
@@ -96,7 +90,7 @@ export default function App() {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [examStatus, examMode, soundEnabled]);
+  }, [examStatus, soundEnabled]);
 
   const handleStartExam = (data: StudentData) => {
     setStudentData(data);
@@ -224,7 +218,6 @@ export default function App() {
     playSubmitChime(soundEnabled);
     window.scrollTo({ top: 0, behavior: 'smooth' });
     sendResultToGoogleSheet(result);
-    // Display subtle auto-submit notification
     setTimeout(() => {
       alert(alertMsg);
     }, 200);
@@ -240,14 +233,8 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleUpdateExamMode = (mode: 'live' | 'open') => {
-    setExamMode(mode);
-    localStorage.setItem(DEFAULT_EXAM_MODE_KEY, mode);
-  };
-
-  // Determine whether to display the Time Notice Card:
-  // If examMode is 'live' and we are outside the 8:00 PM - 9:00 PM window and exam hasn't started yet
-  const shouldShowTimeNotice = examMode === 'live' && !isWithinLiveWindow && examStatus === 'not_started';
+  // Strictly Live: Time Notice is displayed whenever current time is outside 8:00 PM - 9:00 PM
+  const shouldShowTimeNotice = !isWithinLiveWindow && examStatus === 'not_started';
 
   return (
     <div className="min-h-screen bg-slate-100/90 text-slate-800 flex flex-col font-sans">
@@ -258,28 +245,24 @@ export default function App() {
         soundEnabled={soundEnabled}
         onToggleSound={() => setSoundEnabled((prev) => !prev)}
         onOpenSettings={() => setIsSettingsOpen(true)}
-        examMode={examMode}
         answeredCount={Object.keys(userAnswers).length}
         totalQuestions={questions.length}
       />
 
       {/* Main Container */}
       <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8">
-        {/* Step 0: Scheduled Window Notice Card */}
+        {/* Step 0: Scheduled Window Notice Card (Strictly enforced 8:00 PM - 9:00 PM) */}
         {shouldShowTimeNotice && (
           <TimeNoticeCard
             isBeforeStart={isBeforeStart}
-            isAfterEnd={isAfterEnd}
             currentTimeString={currentTimeString}
-            onEnterPracticeMode={() => handleUpdateExamMode('open')}
           />
         )}
 
-        {/* Step 1: Candidate Registration */}
+        {/* Step 1: Candidate Registration (Only active within 8:00 PM - 9:00 PM) */}
         {!shouldShowTimeNotice && examStatus === 'not_started' && (
           <RegistrationCard
             onStart={handleStartExam}
-            examMode={examMode}
           />
         )}
 
@@ -360,8 +343,6 @@ export default function App() {
       <SettingsModal
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
-        examMode={examMode}
-        onUpdateExamMode={handleUpdateExamMode}
         soundEnabled={soundEnabled}
         onToggleSound={() => setSoundEnabled((prev) => !prev)}
         onScriptUrlChange={(url) => setScriptUrl(url)}
