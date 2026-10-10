@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+}
+
+.bangla-text {
+  font-family: 'Hind Siliguri', 'SolaimanLipi', Arial, sans-serif;
+}
+
+.english-text {
+  font-family: 'Merriweather', 'Times New Roman', Times, serif;
+}
+
+.english-sans {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+@media print {
+  header, .no-print {
+    display: none !important;
+  }
+  body {
+    background-color: white !important;
+    color: black !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+}

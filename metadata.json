@@ -1,0 +1,6 @@
+{
+  "name": "CPR Medical Academy - Online Exam Portal",
+  "description": "BCS Special Crystal Batch Online Exam Portal for English Literature featuring timed testing, negative marking, instant grading, and in-depth review.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
