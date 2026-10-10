@@ -19,14 +19,40 @@
 }
 
 @media print {
-  header, .no-print {
+  @page {
+    size: landscape;
+    margin: 0;
+  }
+  header, footer, .no-print {
     display: none !important;
   }
   body {
     background-color: white !important;
     color: black !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
-  .print-only {
+  .no-print-bg {
+    background: transparent !important;
+    position: static !important;
+    padding: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+  .print-certificate-target {
     display: block !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+  }
+  .certificate-container {
+    box-shadow: none !important;
+    border: none !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: none !important;
   }
 }

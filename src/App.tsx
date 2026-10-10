@@ -321,18 +321,37 @@ export default function App() {
         )}
       </main>
 
-      {/* Bottom Footer */}
-      <footer className="bg-white border-t border-slate-200/80 py-4 px-6 text-center text-xs text-slate-500 no-print">
-        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-          <p className="bangla-text">
-            © CPR Medical Academy · BCS Special Crystal Batch · সর্বস্বত্ব সংরক্ষিত
-          </p>
-          <div className="flex items-center gap-4 text-[11px] text-slate-400">
-            <span>Duration: 30 Mins</span>
-            <span>·</span>
-            <span>Total: 40 MCQs</span>
-            <span>·</span>
-            <span>Negative Marking: 0.5</span>
+      {/* Bottom Footer with Official Academy Address & Contacts */}
+      <footer className="bg-white border-t border-slate-200/90 py-5 px-6 text-xs text-slate-600 no-print">
+        <div className="max-w-5xl mx-auto space-y-3">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-3 border-b border-slate-100 pb-3">
+            <div className="flex items-center gap-2">
+              <span className="font-bold text-indigo-950 uppercase english-sans">CPR Medical Academy</span>
+              <span className="text-slate-300">·</span>
+              <span className="text-indigo-700 font-medium bangla-text">বিসিএস স্পেশাল ক্রিস্টাল ব্যাচ</span>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-4 text-xs">
+              <a
+                href="https://www.facebook.com/profile.php?id=61574859873464"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-700 hover:text-blue-800 font-semibold flex items-center gap-1.5"
+              >
+                <span>অফিসিয়াল ফেসবুক পেইজ</span>
+              </a>
+              <span className="text-slate-300">·</span>
+              <span className="text-slate-700 font-medium">
+                হটলাইন: <strong className="text-slate-900 font-mono">01898-938981 (WhatsApp)</strong> / <strong className="text-slate-900 font-mono">01898-938982</strong>
+              </span>
+            </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-slate-500">
+            <p className="bangla-text">
+              <strong>ঠিকানা:</strong> মতি টাওয়ার (৫ম তলা), গুলজার মোড়, চকবাজার, চট্টগ্রাম (EBL ব্যাংকের ATM বুথের ডান পাশে লিফটের ৪ তলা)
+            </p>
+            <p>© {new Date().getFullYear()} CPR Medical Academy · সর্বস্বত্ব সংরক্ষিত</p>
           </div>
         </div>
       </footer>

@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import confetti from 'canvas-confetti';
-import { Award, CheckCircle, XCircle, HelpCircle, Printer, RefreshCw, Eye, BookOpen, Send, Clock, ShieldCheck } from 'lucide-react';
+import { Award, CheckCircle, XCircle, HelpCircle, Download, RefreshCw, Eye, BookOpen, Send, Clock, ShieldCheck, Sparkles } from 'lucide-react';
 import { ExamResult } from '../types/exam';
+import { CertificateModal } from './CertificateModal';
 
 interface ResultInterfaceProps {
   result: ExamResult;
@@ -22,24 +23,20 @@ export const ResultInterface: React.FC<ResultInterfaceProps> = ({
   isSyncing,
   onResync,
 }) => {
-  useEffect(() => {
-    // Fire celebratory confetti if score is >= 20 (50%+)
-    if (result.finalScore >= 20) {
-      try {
-        confetti({
-          particleCount: 80,
-          spread: 70,
-          origin: { y: 0.6 },
-        });
-      } catch {
-        // Ignore confetti error
-      }
-    }
-  }, [result.finalScore]);
+  const [isCertificateModalOpen, setIsCertificateModalOpen] = useState(false);
 
-  const handlePrint = () => {
-    window.print();
-  };
+  useEffect(() => {
+    // Celebratory confetti upon completion
+    try {
+      confetti({
+        particleCount: 100,
+        spread: 80,
+        origin: { y: 0.6 },
+      });
+    } catch {
+      // Ignore confetti error
+    }
+  }, []);
 
   const getPerformanceBadge = (score: number) => {
     if (score >= 32) {
@@ -78,8 +75,8 @@ export const ResultInterface: React.FC<ResultInterfaceProps> = ({
     <div className="space-y-6 max-w-3xl mx-auto animate-fade-in pb-16">
       {/* Official Scorecard Card */}
       <div className="bg-white rounded-3xl shadow-xl border border-slate-200/90 p-6 sm:p-10 text-center relative overflow-hidden">
-        {/* Top Watermark Pattern */}
-        <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-indigo-600 via-indigo-800 to-emerald-600" />
+        {/* Top Watermark Gradient Accent */}
+        <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-amber-500 via-indigo-800 to-amber-500" />
 
         {/* Institution Branding */}
         <div className="mb-6">
@@ -91,7 +88,7 @@ export const ResultInterface: React.FC<ResultInterfaceProps> = ({
             CPR Medical Academy
           </h2>
           <p className="text-sm font-semibold text-slate-500 bangla-text mt-0.5">
-            অনলাইন পরীক্ষা ফলাফল পত্র (Official Result Scorecard)
+            অনলাইন পরীক্ষা ফলাফল ও মেধা মূল্যায়ন (Official Exam Result)
           </p>
           <p className="text-xs text-slate-400 mt-1">
             বিষয়: English Literature · পূর্ণমান: ৪০.০০ · সময়: ৩০ মিনিট
@@ -124,7 +121,7 @@ export const ResultInterface: React.FC<ResultInterfaceProps> = ({
         {/* Final Merit Score Spotlight */}
         <div className="bg-indigo-50/70 border-2 border-indigo-200/80 rounded-2xl p-6 sm:p-8 mb-6 relative">
           <span className="text-xs font-bold uppercase tracking-wider text-indigo-700 bangla-text block mb-1">
-            চূড়ান্ত প্রাপ্ত নম্বর (Final Merit Score)
+            চূড়ান্ত প্রাপ্ত নম্বর (FINAL MERIT SCORE)
           </span>
 
           <div className="flex items-baseline justify-center gap-1.5 my-2">
@@ -213,12 +210,23 @@ export const ResultInterface: React.FC<ResultInterfaceProps> = ({
           </button>
         </div>
 
-        {/* Action Controls (No-Print) */}
+        {/* Action Controls: Direct Certificate Button */}
         <div className="flex flex-wrap items-center justify-center gap-3 no-print">
+          {/* Certificate Main Button */}
+          <button
+            type="button"
+            onClick={() => setIsCertificateModalOpen(true)}
+            className="bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-600 hover:from-amber-700 hover:to-yellow-700 text-white font-bold px-7 py-3.5 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 bangla-text text-base flex items-center gap-2.5 cursor-pointer transform hover:-translate-y-0.5"
+          >
+            <Award className="w-5 h-5 text-yellow-100" />
+            <span>সার্টিফিকেট গ্রহণ ও ডাউনলোড করুন (Get Certificate)</span>
+            <Sparkles className="w-4 h-4 text-yellow-200 animate-pulse" />
+          </button>
+
           <button
             type="button"
             onClick={onToggleReview}
-            className={`px-6 py-3 rounded-xl font-semibold text-sm transition bangla-text shadow-sm flex items-center gap-2 cursor-pointer ${
+            className={`px-6 py-3.5 rounded-xl font-semibold text-sm transition bangla-text shadow-sm flex items-center gap-2 cursor-pointer ${
               isReviewOpen
                 ? 'bg-indigo-700 text-white hover:bg-indigo-800'
                 : 'bg-indigo-600 text-white hover:bg-indigo-700'
@@ -232,23 +240,21 @@ export const ResultInterface: React.FC<ResultInterfaceProps> = ({
 
           <button
             type="button"
-            onClick={handlePrint}
-            className="px-5 py-3 rounded-xl font-semibold text-sm border border-slate-300 text-slate-700 hover:bg-slate-50 transition bangla-text flex items-center gap-2 cursor-pointer"
-          >
-            <Printer className="w-4 h-4" />
-            <span>প্রিন্ট / সেভ স্কোরকার্ড</span>
-          </button>
-
-          <button
-            type="button"
             onClick={onRetake}
-            className="px-5 py-3 rounded-xl font-semibold text-sm border border-slate-300 text-slate-700 hover:bg-slate-50 transition bangla-text flex items-center gap-2 cursor-pointer"
+            className="px-5 py-3.5 rounded-xl font-semibold text-sm border border-slate-300 text-slate-700 hover:bg-slate-50 transition bangla-text flex items-center gap-2 cursor-pointer"
           >
             <RefreshCw className="w-4 h-4" />
             <span>পুনরায় পরীক্ষা দিন</span>
           </button>
         </div>
       </div>
+
+      {/* Certificate Modal (Auto-Locked, Zero Manual Edits) */}
+      <CertificateModal
+        isOpen={isCertificateModalOpen}
+        onClose={() => setIsCertificateModalOpen(false)}
+        result={result}
+      />
     </div>
   );
 };
